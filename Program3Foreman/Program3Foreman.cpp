@@ -14,10 +14,13 @@ int main(int argc, char** argv){
     const float fps = 60;
     const int screenW = 600;
     const int screenH = 900;
-    const int frogSize = 50;
+    const int frogW = 50;
+    const int frogH = 100;
     float angle = 0;
     bool done = false;
     bool redraw = false;
+    enum KEYS { UP, DOWN, LEFT, RIGHT, SPACE };
+    bool keys[5] = { false, false, false, false, false };
     
     ALLEGRO_DISPLAY* display = NULL;
     ALLEGRO_EVENT_QUEUE* event_queue = NULL;
@@ -59,14 +62,69 @@ int main(int argc, char** argv){
 
         if (ev.type == ALLEGRO_EVENT_TIMER) {
             redraw = true;
-            angle += .1;
+            float temp;
 
+            if (keys[LEFT])
+                angle -= .1;
+            if (keys[RIGHT])
+                angle += .1;
         }
-        if (redraw) {
+
+        else if (ev.type == ALLEGRO_EVENT_KEY_DOWN)
+        {
+            switch (ev.keyboard.keycode)
+            {
+            case ALLEGRO_KEY_ESCAPE:
+                done = true;
+                break;
+            case ALLEGRO_KEY_UP:
+                keys[UP] = true;
+                break;
+            case ALLEGRO_KEY_DOWN:
+                keys[DOWN] = true;
+                break;
+            case ALLEGRO_KEY_LEFT:
+                keys[LEFT] = true;
+                break;
+            case ALLEGRO_KEY_RIGHT:
+                keys[RIGHT] = true;
+                break;
+            case ALLEGRO_KEY_SPACE:
+                keys[SPACE] = true;
+                //shoot somethbing
+                break;
+            }
+        }
+        else if (ev.type == ALLEGRO_EVENT_KEY_UP)
+        {
+            switch (ev.keyboard.keycode)
+            {
+            case ALLEGRO_KEY_ESCAPE:
+                done = true;
+                break;
+            case ALLEGRO_KEY_UP:
+                keys[UP] = false;
+                break;
+            case ALLEGRO_KEY_DOWN:
+                keys[DOWN] = false;
+                break;
+            case ALLEGRO_KEY_LEFT:
+                keys[LEFT] = false;
+                break;
+            case ALLEGRO_KEY_RIGHT:
+                keys[RIGHT] = false;
+                break;
+            case ALLEGRO_KEY_SPACE:
+                keys[SPACE] = false;
+                break;
+            }
+        }
+        
+        if (redraw && al_is_event_queue_empty(event_queue)) {
             al_clear_to_color(al_map_rgb(0, 0, 0));
             al_draw_bitmap(image, 0, 0, 0);
             //al_draw_bitmap(frog, 400, 800, 0);
-            al_draw_rotated_bitmap(frog, (frogSize / 2), frogSize / 2, (screenW / 2 - (frogSize / 2)), 800, angle, 0);
+            al_draw_rotated_bitmap(frog, (frogW / 2), frogH, (screenW / 2), 800, angle, 0);
             al_draw_bitmap(fly1, 300, screenH / 2, 0);
             al_flip_display();
             redraw = false;
