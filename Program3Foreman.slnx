@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Program3Foreman/Program3Foreman.vcxproj" Id="a49b8f80-3dfb-4cc8-968a-1948815700c4" />
+</Solution>
