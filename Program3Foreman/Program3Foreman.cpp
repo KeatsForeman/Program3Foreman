@@ -134,7 +134,7 @@ int main(int argc, char** argv){
             al_clear_to_color(al_map_rgb(0, 0, 0));
             al_draw_bitmap(image, 0, 0, 0);
             //al_draw_bitmap(fish, 400, 800, 0);
-            al_draw_rotated_bitmap(fish, (fishW / 2), fishH, (screenW / 2), 800, angle, 0);
+            al_draw_rotated_bitmap(fish, (fishW / 2), fishH/2, (screenW / 2), 800, angle, 0);
             al_draw_bitmap(fly1, 300, screenH / 2, 0);
             al_draw_bitmap(fly2, 200, screenH / 2, 0);
             al_draw_bitmap(spittle, screenW / 2, screenH / 2, 0);

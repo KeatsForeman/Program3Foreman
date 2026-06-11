@@ -133,14 +133,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="frog.cpp" />
+    <ClCompile Include="fly.cpp" />
     <ClCompile Include="Program3Foreman.cpp" />
+    <ClCompile Include="spittle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="frog.h" />
+    <ClInclude Include="fly.h" />
+    <ClInclude Include="spittle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

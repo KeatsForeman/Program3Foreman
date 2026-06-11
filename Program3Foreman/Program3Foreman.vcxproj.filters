@@ -18,7 +18,10 @@
     <ClCompile Include="Program3Foreman.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="frog.cpp">
+    <ClCompile Include="fly.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="spittle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -26,7 +29,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="frog.h">
+    <ClInclude Include="fly.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="spittle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
