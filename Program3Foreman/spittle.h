@@ -6,6 +6,7 @@ public:
 	void drawSpittle();
 	void fireSpittle();
 	void updateSpittle();
+	bool getLive();
 
 private:
 	int x;

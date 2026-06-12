@@ -7,10 +7,11 @@
 #include <allegro5\allegro_image.h>
 #include <allegro5\allegro_ttf.h>
 #include <allegro5\allegro_font.h>
+#include "spittle.h"
 
 
-int main(int argc, char** argv){
-    
+int main(int argc, char** argv) {
+
     const float fps = 60;
     const int screenW = 600;
     const int screenH = 900;
@@ -19,8 +20,9 @@ int main(int argc, char** argv){
     float angle = 0;
     bool done = false;
     bool redraw = false;
-    enum KEYS { UP, DOWN, LEFT, RIGHT, SPACE };
-    bool keys[5] = { false, false, false, false, false };
+    const int Num_spittles = 20;
+    enum KEYS { UP, DOWN, LEFT, RIGHT };
+    bool keys[5] = { false, false, false, false };
     
     ALLEGRO_DISPLAY* display = NULL;
     ALLEGRO_EVENT_QUEUE* event_queue = NULL;
@@ -29,19 +31,20 @@ int main(int argc, char** argv){
     ALLEGRO_BITMAP* fly1 = NULL;
     ALLEGRO_BITMAP* fly2 = NULL;
     ALLEGRO_BITMAP* fish = NULL;
-    ALLEGRO_BITMAP* spittle = NULL;
+    ALLEGRO_BITMAP* spit = NULL;
 
     if (!al_init()) {
         return -1;
     }
 
     al_init_image_addon();
+    spittle Spittles[Num_spittles];
 
     image = al_load_bitmap("waterImage.png");
     fish = al_load_bitmap("fish.png");
     fly1 = al_load_bitmap("fly.png");
     fly2 = al_load_bitmap("flysad.png");
-    spittle = al_load_bitmap("spittle.png");
+    spit = al_load_bitmap("spittle.png");
 
 
     display = al_create_display(screenW, screenH);
@@ -65,6 +68,9 @@ int main(int argc, char** argv){
         if (ev.type == ALLEGRO_EVENT_TIMER) {
             redraw = true;
             float temp;
+            for (int i = 0; i < Num_spittles; i++) {
+                Spittles[i].updateSpittle();
+            }
 
             if (keys[LEFT]) {
                 temp = angle;
@@ -100,9 +106,12 @@ int main(int argc, char** argv){
                 keys[RIGHT] = true;
                 break;
             case ALLEGRO_KEY_SPACE:
-                keys[SPACE] = true;
-                //shoot somethbing
-                break;
+                for (int i = 0; i < Num_spittles; i++) {
+                    if (!Spittles[i].getLive()) {
+                        Spittles[i].fireSpittle();
+                        break;
+                    }
+                }
             }
         }
         else if (ev.type == ALLEGRO_EVENT_KEY_UP)
@@ -124,9 +133,6 @@ int main(int argc, char** argv){
             case ALLEGRO_KEY_RIGHT:
                 keys[RIGHT] = false;
                 break;
-            case ALLEGRO_KEY_SPACE:
-                keys[SPACE] = false;
-                break;
             }
         }
         
@@ -137,7 +143,9 @@ int main(int argc, char** argv){
             al_draw_rotated_bitmap(fish, (fishW / 2), fishH/2, (screenW / 2), 800, angle, 0);
             al_draw_bitmap(fly1, 300, screenH / 2, 0);
             al_draw_bitmap(fly2, 200, screenH / 2, 0);
-            al_draw_bitmap(spittle, screenW / 2, screenH / 2, 0);
+            for (int i = 0; i < Num_spittles; i++) {
+                Spittles[i].drawSpittle();
+            }
             al_flip_display();
             redraw = false;
         }
