@@ -4,7 +4,7 @@ public:
 	spittle();
 	~spittle();
 	void drawSpittle();
-	void fireSpittle();
+	void fireSpittle(float angle);
 	void updateSpittle();
 	bool getLive();
 

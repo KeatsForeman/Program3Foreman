@@ -8,6 +8,7 @@
 #include <allegro5\allegro_ttf.h>
 #include <allegro5\allegro_font.h>
 #include "spittle.h"
+#include "fly.h"
 
 
 int main(int argc, char** argv) {
@@ -20,7 +21,8 @@ int main(int argc, char** argv) {
     float angle = 0;
     bool done = false;
     bool redraw = false;
-    const int Num_spittles = 20;
+    const int Num_spittles = 10;
+    const int Num_flies = 10;
     enum KEYS { UP, DOWN, LEFT, RIGHT };
     bool keys[5] = { false, false, false, false };
     
@@ -39,6 +41,7 @@ int main(int argc, char** argv) {
 
     al_init_image_addon();
     spittle Spittles[Num_spittles];
+    //fly flies[Num_flies];
 
     image = al_load_bitmap("waterImage.png");
     fish = al_load_bitmap("fish.png");
@@ -108,7 +111,7 @@ int main(int argc, char** argv) {
             case ALLEGRO_KEY_SPACE:
                 for (int i = 0; i < Num_spittles; i++) {
                     if (!Spittles[i].getLive()) {
-                        Spittles[i].fireSpittle();
+                        Spittles[i].fireSpittle(angle);
                         break;
                     }
                 }

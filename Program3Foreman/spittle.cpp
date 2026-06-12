@@ -17,22 +17,24 @@ spittle::~spittle() {
 
 void spittle::drawSpittle() {
 	if (!image) {
-		std::cout << "NO IM AGE ";
+		std::cout << "NO IMAGE ";
 	}
 	if (live)
 		al_draw_bitmap(image, x, y, 0);
 }
 
-void spittle::fireSpittle() {
+void spittle::fireSpittle(float angle) {
 	if (!live) {
 		x = 300;
 		y = 800;
+		radian_angle = angle;
 		live = true;
 	}
 }
 void spittle::updateSpittle() {
-	y -= 5;
-	if (y <= 0) {
+	x -= (5 * cos(radian_angle + ALLEGRO_PI/2));
+	y -= (5 * sin(radian_angle + ALLEGRO_PI/2));
+	if ((y <= 0) || (x <= 0) || (x >= 600)) {
 		live = false;
 	}
 }
