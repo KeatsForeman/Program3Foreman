@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
     float angle = 0;
     bool done = false;
     bool redraw = false;
-    const int Num_spittles = 20;
+    const int Num_spittles = 5;
     const int Num_flies = 10;
     enum KEYS { UP, DOWN, LEFT, RIGHT, SPACE };
     bool keys[5] = { false, false, false, false, false };
@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
     srand(time(0));
     int random;
     al_start_timer(timer);
-    
+    int score = 0;
     while (!done) {
 
         ALLEGRO_EVENT ev;
@@ -78,7 +78,7 @@ int main(int argc, char** argv) {
             redraw = true;
             float temp;
             currentTime += 1;
-            if (currentTime % 40 == 0) {
+            if (currentTime % 60 == 0) {
                 for (int i = 0; i < Num_flies; i++) {
                     if (!Flies[i].getLive()) {
                         Flies[i].dropFly(random);
@@ -95,13 +95,13 @@ int main(int argc, char** argv) {
 
             if (keys[LEFT]) {
                 temp = angle;
-                angle -= .1;
+                angle -= .05;
                 if (angle < -ALLEGRO_PI / 3)
                     angle = temp;
             }
             if (keys[RIGHT]) {
                 temp = angle;
-                angle += .1;
+                angle += .05;
                 if (angle > ALLEGRO_PI / 3)
                     angle = temp;
             }
@@ -169,12 +169,11 @@ int main(int argc, char** argv) {
             al_draw_bitmap(image, 0, 0, 0);
             //al_draw_bitmap(fish, 400, 800, 0);
             al_draw_rotated_bitmap(fish, (fishW / 2) - 5, fishH/2, (screenW / 2), 800, angle, 0);
-            al_draw_bitmap(fly2, 200, screenH / 2, 0);
             for (int i = 0; i < Num_spittles; i++) {
                 Spittles[i].drawSpittle();
             }
             for (int i = 0; i < Num_flies; i++) {
-                Flies[i].drawFly();
+                Flies[i].drawFly(Flies[i].getVersion());
             }
             for (int i = 0; i < Num_spittles; i++) {
                 Spittles[i].collideSpittle(Flies, Num_flies);

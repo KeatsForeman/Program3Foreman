@@ -40,9 +40,16 @@ void spittle::updateSpittle() {
 void spittle::collideSpittle(fly Flies[], int Num_Flies) {
 	if (live) {
 		for (int i = 0; i < Num_Flies; i++) {
-			if (Flies[i].getLive()) {
-				if (Flies[i].getY() > y) {
-					Flies[i].setLive(false);
+			if ((Flies[i].getLive()) && (Flies[i].getVersion() == 0)) {
+				int fx = Flies[i].getX();
+				int fy = Flies[i].getY();
+				int bx = Flies[i].getBoundx();
+				int by = Flies[i].getBoundy();
+				if (x > (fx - bx) &&
+					x < (fx + bx) &&
+					y >(fy - by) &&
+					y < (fy + by)) {
+					Flies[i].setVersion(1);
 					live = false;
 				}
 			}

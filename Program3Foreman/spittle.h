@@ -1,3 +1,5 @@
+#ifndef SPITTLE_H
+#define SPITTLE_H
 #include "fly.h"
 
 class spittle {
@@ -19,3 +21,4 @@ private:
 	float radian_angle;
 	ALLEGRO_BITMAP* image;
 };
+#endif

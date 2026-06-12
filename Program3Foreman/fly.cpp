@@ -6,14 +6,19 @@
 fly::fly() {
 	speed = 2;
 	live = false;
-	image = al_load_bitmap("fly.png");
+	boundx = 100;
+	boundy = 80;
+	version = 0;
+	images[0] = al_load_bitmap("fly.png");
+	images[1] = al_load_bitmap("flySad.png");
 }
 fly::~fly() {
-	al_destroy_bitmap(image);
+	al_destroy_bitmap(images[0]);
+	al_destroy_bitmap(images[1]);
 }
-void fly::drawFly() {
+void fly::drawFly(int v) {
 	if (live) {
-		al_draw_bitmap(image, x, y, 0);
+		al_draw_bitmap(images[v], x, y, 0);
 	}
 }
 void fly::dropFly(int xx) {
@@ -24,6 +29,7 @@ void fly::dropFly(int xx) {
 void fly::updateFly() {
 	y += speed;
 	if (y > 720) {
+		version = 0;
 		live = false;
 	}
 }
@@ -38,4 +44,16 @@ int fly::getX() {
 }
 int fly::getY() {
 	return y;
+}
+int fly::getBoundx() {
+	return boundx;
+}
+int fly::getBoundy() {
+	return boundy;
+}
+void fly::setVersion(int v) {
+	version = v;
+}
+int fly::getVersion() {
+	return version;
 }
