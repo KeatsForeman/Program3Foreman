@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <string>
 #include <ctime>
 #include <allegro5\allegro.h>
 #include <allegro5\allegro_image.h>
@@ -10,6 +11,7 @@
 #include <allegro5\allegro_font.h>
 #include "spittle.h"
 #include "fly.h"
+#include "player.h"
 
 
 int main(int argc, char** argv) {
@@ -40,10 +42,13 @@ int main(int argc, char** argv) {
     if (!al_init()) {
         return -1;
     }
-
+    al_init_ttf_addon();
+    al_init_font_addon();
     al_init_image_addon();
     spittle Spittles[Num_spittles];
     fly Flies[Num_flies];
+    player myPlayer;
+    ALLEGRO_FONT* font = al_load_font("Cat.ttf", 50, 0);
     //fly flies[Num_flies];
 
     image = al_load_bitmap("waterImage.png");
@@ -67,7 +72,6 @@ int main(int argc, char** argv) {
     srand(time(0));
     int random;
     al_start_timer(timer);
-    int score = 0;
     while (!done) {
 
         ALLEGRO_EVENT ev;
@@ -167,7 +171,10 @@ int main(int argc, char** argv) {
         if (redraw && al_is_event_queue_empty(event_queue)) {
             al_clear_to_color(al_map_rgb(0, 0, 0));
             al_draw_bitmap(image, 0, 0, 0);
-            //al_draw_bitmap(fish, 400, 800, 0);
+            
+            std::string scoreBoard = std::to_string(myPlayer.getScore());
+            al_draw_text(font, al_map_rgb(0, 0, 0), 50, 850, 0, scoreBoard.c_str());
+
             al_draw_rotated_bitmap(fish, (fishW / 2) - 5, fishH/2, (screenW / 2), 800, angle, 0);
             for (int i = 0; i < Num_spittles; i++) {
                 Spittles[i].drawSpittle();
@@ -176,7 +183,7 @@ int main(int argc, char** argv) {
                 Flies[i].drawFly(Flies[i].getVersion());
             }
             for (int i = 0; i < Num_spittles; i++) {
-                Spittles[i].collideSpittle(Flies, Num_flies);
+                Spittles[i].collideSpittle(Flies, Num_flies, myPlayer);
             }
             al_flip_display();
             redraw = false;

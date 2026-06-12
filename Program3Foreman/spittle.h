@@ -1,6 +1,7 @@
 #ifndef SPITTLE_H
 #define SPITTLE_H
 #include "fly.h"
+#include "player.h"
 
 class spittle {
 public:
@@ -9,7 +10,7 @@ public:
 	void drawSpittle();
 	void fireSpittle(float angle);
 	void updateSpittle();
-	void collideSpittle(fly Flies[], int num_Flies);
+	void collideSpittle(fly Flies[], int num_Flies, player &myPlayer);
 	bool getLive();
 	int getX();
 	int getY();

@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="fly.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="Program3Foreman.cpp" />
     <ClCompile Include="spittle.cpp" />
   </ItemGroup>
@@ -142,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fly.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="spittle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

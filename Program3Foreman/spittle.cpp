@@ -37,7 +37,7 @@ void spittle::updateSpittle() {
 		live = false;
 	}
 }
-void spittle::collideSpittle(fly Flies[], int Num_Flies) {
+void spittle::collideSpittle(fly Flies[], int Num_Flies, player &myPlayer) {
 	if (live) {
 		for (int i = 0; i < Num_Flies; i++) {
 			if ((Flies[i].getLive()) && (Flies[i].getVersion() == 0)) {
@@ -50,6 +50,7 @@ void spittle::collideSpittle(fly Flies[], int Num_Flies) {
 					y >(fy - by) &&
 					y < (fy + by)) {
 					Flies[i].setVersion(1);
+					myPlayer.updateScore();
 					live = false;
 				}
 			}
