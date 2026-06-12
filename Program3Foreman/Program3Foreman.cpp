@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <ctime>
 #include <allegro5\allegro.h>
 #include <allegro5\allegro_image.h>
 #include <allegro5\allegro_ttf.h>
@@ -14,6 +15,7 @@
 int main(int argc, char** argv) {
 
     const float fps = 60;
+    int currentTime = 0;
     const int screenW = 600;
     const int screenH = 900;
     const int fishW = 160;
@@ -21,10 +23,10 @@ int main(int argc, char** argv) {
     float angle = 0;
     bool done = false;
     bool redraw = false;
-    const int Num_spittles = 10;
+    const int Num_spittles = 20;
     const int Num_flies = 10;
-    enum KEYS { UP, DOWN, LEFT, RIGHT };
-    bool keys[5] = { false, false, false, false };
+    enum KEYS { UP, DOWN, LEFT, RIGHT, SPACE };
+    bool keys[5] = { false, false, false, false, false };
     
     ALLEGRO_DISPLAY* display = NULL;
     ALLEGRO_EVENT_QUEUE* event_queue = NULL;
@@ -41,6 +43,7 @@ int main(int argc, char** argv) {
 
     al_init_image_addon();
     spittle Spittles[Num_spittles];
+    fly Flies[Num_flies];
     //fly flies[Num_flies];
 
     image = al_load_bitmap("waterImage.png");
@@ -61,16 +64,31 @@ int main(int argc, char** argv) {
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_register_event_source(event_queue, al_get_display_event_source(display));
 
+    srand(time(0));
+    int random;
     al_start_timer(timer);
-
+    
     while (!done) {
 
         ALLEGRO_EVENT ev;
         al_wait_for_event(event_queue, &ev);
 
         if (ev.type == ALLEGRO_EVENT_TIMER) {
+            random = rand() % 500;
             redraw = true;
             float temp;
+            currentTime += 1;
+            if (currentTime % 40 == 0) {
+                for (int i = 0; i < Num_flies; i++) {
+                    if (!Flies[i].getLive()) {
+                        Flies[i].dropFly(random);
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < Num_flies; i++) {
+                Flies[i].updateFly();
+            }
             for (int i = 0; i < Num_spittles; i++) {
                 Spittles[i].updateSpittle();
             }
@@ -86,6 +104,14 @@ int main(int argc, char** argv) {
                 angle += .1;
                 if (angle > ALLEGRO_PI / 3)
                     angle = temp;
+            }
+            if (keys[SPACE]) {
+                for (int i = 0; i < Num_spittles; i++) {
+                    if ((!Spittles[i].getLive()) && (currentTime % 10 == 0)) {
+                        Spittles[i].fireSpittle(angle);
+                        break;
+                    }
+                }
             }
         }
 
@@ -109,12 +135,8 @@ int main(int argc, char** argv) {
                 keys[RIGHT] = true;
                 break;
             case ALLEGRO_KEY_SPACE:
-                for (int i = 0; i < Num_spittles; i++) {
-                    if (!Spittles[i].getLive()) {
-                        Spittles[i].fireSpittle(angle);
-                        break;
-                    }
-                }
+                keys[SPACE] = true;
+                break;
             }
         }
         else if (ev.type == ALLEGRO_EVENT_KEY_UP)
@@ -136,6 +158,9 @@ int main(int argc, char** argv) {
             case ALLEGRO_KEY_RIGHT:
                 keys[RIGHT] = false;
                 break;
+            case ALLEGRO_KEY_SPACE:
+                keys[SPACE] = false;
+                break;
             }
         }
         
@@ -143,11 +168,16 @@ int main(int argc, char** argv) {
             al_clear_to_color(al_map_rgb(0, 0, 0));
             al_draw_bitmap(image, 0, 0, 0);
             //al_draw_bitmap(fish, 400, 800, 0);
-            al_draw_rotated_bitmap(fish, (fishW / 2), fishH/2, (screenW / 2), 800, angle, 0);
-            al_draw_bitmap(fly1, 300, screenH / 2, 0);
+            al_draw_rotated_bitmap(fish, (fishW / 2) - 5, fishH/2, (screenW / 2), 800, angle, 0);
             al_draw_bitmap(fly2, 200, screenH / 2, 0);
             for (int i = 0; i < Num_spittles; i++) {
                 Spittles[i].drawSpittle();
+            }
+            for (int i = 0; i < Num_flies; i++) {
+                Flies[i].drawFly();
+            }
+            for (int i = 0; i < Num_spittles; i++) {
+                Spittles[i].collideSpittle(Flies, Num_flies);
             }
             al_flip_display();
             redraw = false;

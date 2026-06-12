@@ -1,3 +1,4 @@
+#include "fly.h"
 
 class spittle {
 public:
@@ -6,11 +7,13 @@ public:
 	void drawSpittle();
 	void fireSpittle(float angle);
 	void updateSpittle();
+	void collideSpittle(fly Flies[], int num_Flies);
 	bool getLive();
+	int getX();
+	int getY();
 
 private:
-	int x;
-	int y;
+	int x, y;
 	int speed;
 	bool live;
 	float radian_angle;
