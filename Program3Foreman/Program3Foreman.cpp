@@ -192,4 +192,10 @@ int main(int argc, char** argv) {
             redraw = false;
         }
     }
+    al_clear_to_color(al_map_rgb(0, 0, 0));
+    std::string scoreBoard = std::to_string(myPlayer.getScore());
+    al_draw_text(font, al_map_rgb(255, 255, 255), screenW/2-150, screenH/2, 0, "You scored: ");
+    al_draw_text(font, al_map_rgb(255, 255, 255), screenW/2, screenH/2, 0, scoreBoard.c_str());
+    al_flip_display();
+    al_rest(5);
 }
