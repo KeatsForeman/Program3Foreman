@@ -4,6 +4,7 @@
 #include "fly.h"
 #include <iostream>
 
+//constructor
 spittle::spittle() {
 	speed = 10;
 	live = false;
@@ -14,14 +15,14 @@ spittle::~spittle() {
 	al_destroy_bitmap(image);
 }
 
+//draws projectile if it is alive
 void spittle::drawSpittle() {
-	if (!image) {
-		std::cout << "NO IMAGE ";
-	}
 	if (live)
 		al_draw_bitmap(image, x, y, 0);
 }
 
+//initiates and sets starting position for projectile
+//takes angle parameter used to determine direction of shot
 void spittle::fireSpittle(float angle) {
 	if (!live) {
 		x = 300;
@@ -30,13 +31,19 @@ void spittle::fireSpittle(float angle) {
 		live = true;
 	}
 }
+
+//updates x and y positions based on angle
 void spittle::updateSpittle() {
-	x -= (5 * cos(radian_angle + ALLEGRO_PI/2));
+	x -= (5 * cos(radian_angle + ALLEGRO_PI/2)); // pi / 2 to make spit shoot up instead of to the side
 	y -= (5 * sin(radian_angle + ALLEGRO_PI/2));
 	if ((y <= 0) || (x <= 0) || (x >= 570)) {
 		live = false;
 	}
 }
+
+//detects collisions with flies and updates fly version and score
+//takes fly array, array size, and player reference as parameter
+//uses player to update score
 void spittle::collideSpittle(fly Flies[], int Num_Flies, player &myPlayer) {
 	if (live) {
 		for (int i = 0; i < Num_Flies; i++) {

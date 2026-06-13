@@ -1,5 +1,6 @@
 #include "player.h"
 
+//constructor
 player::player() {
 	score = 0;
 	gameStatus = 0;

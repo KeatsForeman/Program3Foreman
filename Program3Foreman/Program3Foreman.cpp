@@ -24,20 +24,18 @@ int main(int argc, char** argv) {
     const int fishH = 200;
     float angle = 0;
     bool done = false;
+    bool finish = false;
     bool redraw = false;
     const int Num_spittles = 20;
     const int Num_flies = 10;
-    enum KEYS { UP, DOWN, LEFT, RIGHT, SPACE };
-    bool keys[5] = { false, false, false, false, false };
+    enum KEYS { LEFT, RIGHT, SPACE };
+    bool keys[5] = { false, false, false };
     
     ALLEGRO_DISPLAY* display = NULL;
     ALLEGRO_EVENT_QUEUE* event_queue = NULL;
     ALLEGRO_TIMER* timer = NULL;
     ALLEGRO_BITMAP* image = NULL;
-    ALLEGRO_BITMAP* fly1 = NULL;
-    ALLEGRO_BITMAP* fly2 = NULL;
     ALLEGRO_BITMAP* fish = NULL;
-    ALLEGRO_BITMAP* spit = NULL;
 
     if (!al_init()) {
         return -1;
@@ -45,17 +43,14 @@ int main(int argc, char** argv) {
     al_init_ttf_addon();
     al_init_font_addon();
     al_init_image_addon();
+
     spittle Spittles[Num_spittles];
     fly Flies[Num_flies];
     player myPlayer;
     ALLEGRO_FONT* font = al_load_font("Cat.ttf", 30, 0);
-    //fly flies[Num_flies];
 
     image = al_load_bitmap("waterImage.png");
     fish = al_load_bitmap("fish.png");
-    fly1 = al_load_bitmap("fly.png");
-    fly2 = al_load_bitmap("flysad.png");
-    spit = al_load_bitmap("spittle.png");
 
 
     display = al_create_display(screenW, screenH);
@@ -72,6 +67,7 @@ int main(int argc, char** argv) {
     srand(time(0));
     int random;
     al_start_timer(timer);
+
     while (!done) {
 
         ALLEGRO_EVENT ev;
@@ -82,6 +78,8 @@ int main(int argc, char** argv) {
             redraw = true;
             float temp;
             currentTime += 1;
+
+            //drop about once a second
             if (currentTime % 60 == 0) {
                 for (int i = 0; i < Num_flies; i++) {
                     if (!Flies[i].getLive()) {
@@ -98,22 +96,24 @@ int main(int argc, char** argv) {
             }
             if (myPlayer.getGameStatus() == 5) {
                 done = true;
+                finish = true;
             }
 
             if (keys[LEFT]) {
                 temp = angle;
                 angle -= .05;
-                if (angle < -ALLEGRO_PI / 3)
+                if (angle < -ALLEGRO_PI / 3) // pi / 3 for 60 degree range 
                     angle = temp;
             }
             if (keys[RIGHT]) {
                 temp = angle;
                 angle += .05;
-                if (angle > ALLEGRO_PI / 3)
+                if (angle > ALLEGRO_PI / 3) // 60 on both sides
                     angle = temp;
             }
             if (keys[SPACE]) {
                 for (int i = 0; i < Num_spittles; i++) {
+                    //puts a gap between shots so all are not fired at once
                     if ((!Spittles[i].getLive()) && (currentTime % 10 == 0)) {
                         Spittles[i].fireSpittle(angle);
                         break;
@@ -128,12 +128,6 @@ int main(int argc, char** argv) {
             {
             case ALLEGRO_KEY_ESCAPE:
                 done = true;
-                break;
-            case ALLEGRO_KEY_UP:
-                keys[UP] = true;
-                break;
-            case ALLEGRO_KEY_DOWN:
-                keys[DOWN] = true;
                 break;
             case ALLEGRO_KEY_LEFT:
                 keys[LEFT] = true;
@@ -152,12 +146,6 @@ int main(int argc, char** argv) {
             {
             case ALLEGRO_KEY_ESCAPE:
                 done = true;
-                break;
-            case ALLEGRO_KEY_UP:
-                keys[UP] = false;
-                break;
-            case ALLEGRO_KEY_DOWN:
-                keys[DOWN] = false;
                 break;
             case ALLEGRO_KEY_LEFT:
                 keys[LEFT] = false;
@@ -192,6 +180,24 @@ int main(int argc, char** argv) {
             redraw = false;
         }
     }
+
+    //end of game loop for attacking animation
+    while (finish) {
+        int complete = 0;
+        al_clear_to_color(al_map_rgb(0, 0, 0));
+        al_draw_bitmap(image, 0, 0, 0);
+        al_draw_rotated_bitmap(fish, (fishW / 2) - 5, fishH / 2, (screenW / 2), 750, angle, 0);
+        for (int i = 0; i < Num_flies; i++) {
+            Flies[i].killFish();
+            Flies[i].drawFly(Flies[i].getVersion());
+            if (Flies[i].getX() == 240) 
+                complete += 1;
+        }
+        al_flip_display();
+        if (complete == 5) //waits till all flies are in place
+            finish = false;
+    }
+    //shows score at end
     al_clear_to_color(al_map_rgb(0, 0, 0));
     std::string scoreBoard = std::to_string(myPlayer.getScore());
     al_draw_text(font, al_map_rgb(255, 255, 255), screenW/2-150, screenH/2, 0, "You scored: ");
