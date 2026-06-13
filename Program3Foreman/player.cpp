@@ -2,7 +2,7 @@
 
 player::player() {
 	score = 0;
-	gameAlive = 0;
+	gameStatus = 0;
 }
 player::~player() {
 }
@@ -11,4 +11,10 @@ void player::updateScore() {
 }
 int player::getScore() {
 	return score;
+}
+void player::updateGameStatus() {
+	gameStatus += 1;
+}
+int player::getGameStatus() {
+	return gameStatus;
 }

@@ -25,7 +25,7 @@ void spittle::drawSpittle() {
 void spittle::fireSpittle(float angle) {
 	if (!live) {
 		x = 300;
-		y = 800;
+		y = 750;
 		radian_angle = angle;
 		live = true;
 	}

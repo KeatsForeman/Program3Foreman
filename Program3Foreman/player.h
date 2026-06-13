@@ -7,9 +7,11 @@ public:
 	~player();
 	void updateScore();
 	int getScore();
+	void updateGameStatus();
+	int getGameStatus();
 
 private:
 	int score;
-	int gameAlive;
+	int gameStatus;
 };
 #endif

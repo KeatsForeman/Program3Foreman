@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
     float angle = 0;
     bool done = false;
     bool redraw = false;
-    const int Num_spittles = 5;
+    const int Num_spittles = 20;
     const int Num_flies = 10;
     enum KEYS { UP, DOWN, LEFT, RIGHT, SPACE };
     bool keys[5] = { false, false, false, false, false };
@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
     spittle Spittles[Num_spittles];
     fly Flies[Num_flies];
     player myPlayer;
-    ALLEGRO_FONT* font = al_load_font("Cat.ttf", 50, 0);
+    ALLEGRO_FONT* font = al_load_font("Cat.ttf", 30, 0);
     //fly flies[Num_flies];
 
     image = al_load_bitmap("waterImage.png");
@@ -91,10 +91,13 @@ int main(int argc, char** argv) {
                 }
             }
             for (int i = 0; i < Num_flies; i++) {
-                Flies[i].updateFly();
+                Flies[i].updateFly(myPlayer);
             }
             for (int i = 0; i < Num_spittles; i++) {
                 Spittles[i].updateSpittle();
+            }
+            if (myPlayer.getGameStatus() == 5) {
+                done = true;
             }
 
             if (keys[LEFT]) {
@@ -173,9 +176,9 @@ int main(int argc, char** argv) {
             al_draw_bitmap(image, 0, 0, 0);
             
             std::string scoreBoard = std::to_string(myPlayer.getScore());
-            al_draw_text(font, al_map_rgb(0, 0, 0), 50, 850, 0, scoreBoard.c_str());
+            al_draw_text(font, al_map_rgb(0, 0, 0), 50, 860, 0, scoreBoard.c_str());
 
-            al_draw_rotated_bitmap(fish, (fishW / 2) - 5, fishH/2, (screenW / 2), 800, angle, 0);
+            al_draw_rotated_bitmap(fish, (fishW / 2) - 5, fishH/2, (screenW / 2), 750, angle, 0);
             for (int i = 0; i < Num_spittles; i++) {
                 Spittles[i].drawSpittle();
             }
